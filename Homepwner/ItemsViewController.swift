@@ -50,6 +50,9 @@ class ItemsViewController: UITableViewController {
         // Get a new or recycled cell
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemCell", forIndexPath: indexPath) as! ItemCell
         
+        // Update the labels for the new preferred text size
+        cell.updateLabels()
+        
         // Set the text on the cell with the description of the item
         // that is at the nth index of items, where n = row this cell
         // will appear in on the tableview
@@ -58,6 +61,14 @@ class ItemsViewController: UITableViewController {
         cell.nameLabel.text = item.name
         cell.serialNumberLabel.text = item.serialNumber
         cell.valueLabel.text = "$\(item.valueInDollars)"
+        
+        if let text = cell.valueLabel.text?.stringByReplacingOccurrencesOfString("$", withString: ""), value = Int(text) {
+            if value < 50 {
+                cell.valueLabel.textColor = UIColor.greenColor()
+            } else {
+                cell.valueLabel.textColor = UIColor.redColor()
+            }
+        }
         
         return cell
     }
@@ -105,6 +116,7 @@ class ItemsViewController: UITableViewController {
         tableView.contentInset = insets
         tableView.scrollIndicatorInsets = insets
         
-        tableView.rowHeight = 65
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 65
     }
 }
